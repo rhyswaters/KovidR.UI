@@ -16,7 +16,6 @@ const theme = createMuiTheme({
 });
 
 function App(props) {
-
   const {isAuthenticated} = useAuth0()
 
   let routes = (
