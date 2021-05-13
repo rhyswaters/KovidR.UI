@@ -19,6 +19,7 @@ import {connect} from 'react-redux';
 import * as actions from '../../store/actions/index';
 import Button from '@material-ui/core/Button';
 import { useAuth0 } from "@auth0/auth0-react";
+import Loading from '../../UI/Loading/Loading';
 
 function Copyright() {
   return (
@@ -39,16 +40,6 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
   },
-  // toolbar: {
-  //   paddingRight: 24, // keep right padding when drawer closed
-  // },
-  // toolbarIcon: {
-  //   display: 'flex',
-  //   alignItems: 'center',
-  //   justifyContent: 'flex-end',
-  //   padding: '0 8px',
-  //   ...theme.mixins.toolbar,
-  // },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(['width', 'margin'], {
@@ -64,12 +55,6 @@ const useStyles = makeStyles((theme) => ({
       duration: theme.transitions.duration.enteringScreen,
     }),
   },
-  // menuButton: {
-  //   marginRight: 36,
-  // },
-  // menuButtonHidden: {
-  //   display: 'none',
-  // },
   title: {
     flexGrow: 1,
   },
@@ -123,7 +108,6 @@ function Dashboard(props) {
   const [guessToSubmitError, setGuessToSubmitError] = React.useState(false);
   const [submitButtonDisabled, setSubmitButtonDisabled] = React.useState(true);
   const [guessToSubmitErrorText, setGuessToSubmitErrorText] = React.useState('');
-
   const { logout, getAccessTokenSilently } = useAuth0();
 
   const guessSubmittedHandler = (event) => {
@@ -184,6 +168,47 @@ function Dashboard(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   
+  let mainDiv = <Loading />;
+
+  if(props.results && props.daysWon && props.nextGuessInfo) {
+    mainDiv = <Container maxWidth="lg" className={classes.container}>
+                <Grid container spacing={3}>
+                  {/* Last Result */}
+                  <Grid item xs={12} md={4} lg={3}>
+                    <Paper className={fixedHeightPaper}>
+                      <LastResult result={props.results[0]}/>
+                    </Paper>
+                  </Grid>
+                  {/* Days Won Pie Chart */}
+                  <Grid item xs={12} md={4} lg={3}>
+                    <Paper className={fixedHeightPaper}>
+                      <DaysWon results={props.daysWon}/>
+                    </Paper>
+                  </Grid>
+                  {/* Submit Guess */}
+                  <Grid item xs={12} md={4} lg={3}>
+                    <Paper className={fixedHeightPaper}>
+                      <SubmitGuess nextGuessInfo={props.nextGuessInfo} 
+                                                          guessSubmitted={guessSubmittedHandler} 
+                                                          onChangeGuess={onChangeGuessToSubmitHandler}
+                                                          guessError={guessToSubmitError}
+                                                          submitButtonDisabled={submitButtonDisabled}
+                                                          errorText={guessToSubmitErrorText}/>
+                    </Paper>
+                  </Grid>
+                  {/* Previous Results */}
+                  <Grid item xs={12}>
+                    <Paper className={classes.paper}>
+                      <PreviousResults results={props.results.slice(1)} />
+                    </Paper>
+                  </Grid>
+                </Grid>
+                <Box pt={4}>
+                  <Copyright />
+                </Box>
+              </Container>;
+  }
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -204,42 +229,7 @@ function Dashboard(props) {
       </AppBar>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
-        <Container maxWidth="lg" className={classes.container}>
-          <Grid container spacing={3}>
-            {/* Last Result */}
-            <Grid item xs={12} md={4} lg={3}>
-              <Paper className={fixedHeightPaper}>
-                {props.results ? <LastResult result={props.results[0]}/> : null}
-              </Paper>
-            </Grid>
-            {/* Days Won Pie Chart */}
-            <Grid item xs={12} md={4} lg={3}>
-              <Paper className={fixedHeightPaper}>
-                {props.daysWon ? <DaysWon results={props.daysWon}/> : null}
-              </Paper>
-            </Grid>
-            {/* Submit Guess */}
-            <Grid item xs={12} md={4} lg={3}>
-              <Paper className={fixedHeightPaper}>
-                {props.nextGuessInfo ? <SubmitGuess nextGuessInfo={props.nextGuessInfo} 
-                                                    guessSubmitted={guessSubmittedHandler} 
-                                                    onChangeGuess={onChangeGuessToSubmitHandler}
-                                                    guessError={guessToSubmitError}
-                                                    submitButtonDisabled={submitButtonDisabled}
-                                                    errorText={guessToSubmitErrorText}/> : null}
-              </Paper>
-            </Grid>
-            {/* Previous Results */}
-            <Grid item xs={12}>
-              <Paper className={classes.paper}>
-                {props.results ? <PreviousResults results={props.results.slice(1)} /> : null}
-              </Paper>
-            </Grid>
-          </Grid>
-          <Box pt={4}>
-            <Copyright />
-          </Box>
-        </Container>
+        {mainDiv}
       </main>
     </div>
   );
