@@ -3,7 +3,7 @@ import axios from 'axios';
 
 //const baseUrl = process.env.API_ADMIN_URL;
 //const baseUrl = 'http://localhost:8000';
-const baseUrl = 'http://54.77.250.86';
+const baseUrl = 'http://34.242.79.116';
 
 function getHeaders(token) {
   return { Authorization: 'Bearer ' + token,
