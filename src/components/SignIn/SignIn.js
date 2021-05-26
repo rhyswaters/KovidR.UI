@@ -51,7 +51,7 @@ export default function SignIn() {
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <div className={classes.paper}>
-          <Typography>Kovidr</Typography>
+          <Typography>KovidR.</Typography>
         </div>
         <div className={classes.paper}>
           <Avatar className={classes.avatar}>
