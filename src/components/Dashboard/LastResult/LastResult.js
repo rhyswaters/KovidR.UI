@@ -18,7 +18,7 @@ export default function LastResult(props) {
   
   return (
     <React.Fragment>
-      <Title>Last Result: </Title>
+      <Title>Last Result </Title>
       <Typography color="textSecondary" className={classes.depositContext}>
         {new Date(props.result.date).toDateString()}
       </Typography>

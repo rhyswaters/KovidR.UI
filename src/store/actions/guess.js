@@ -83,10 +83,10 @@ export const fetchUserSubmittedNextGuessStart = () => {
     }
 };
 
-export function fetchUserSubmittedNextGuess(userName){
+export function fetchUserSubmittedNextGuess(token){
     return dispatch => {
         dispatch(fetchUserSubmittedNextGuessStart());
-        api.hasUserSubmittedNextGuess(userName).then(response => {
+        api.hasUserSubmittedNextGuess(token).then(response => {
             dispatch(fetchUserSubmittedNextGuessSuccess(response.data));
         }).catch(err => {
             dispatch(fetchUserSubmittedNextGuessFail(err));
@@ -117,8 +117,8 @@ export const createGuessStart = () => {
 export function createGuess(guess, token){
     return dispatch => {
         dispatch(createGuessStart());
-        api.createGuess(guess, token).then(response => {
-            dispatch(createGuessSuccess(guess));
+        api.createGuess(guess, token).then((response) => {
+            dispatch(fetchUserSubmittedNextGuess(token));
         }).catch(err => {
             dispatch(createGuessFail(err));
         });
