@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -14,8 +14,9 @@ import Link from '@material-ui/core/Link';
 import DaysWon from './DaysWon/DaysWon';
 import LastResult from './LastResult/LastResult';
 import PreviousResults from './PreviousResults/PreviousResults';
+import PastChampions from './PastChampions/PastChampions';
 import SubmitGuess from './SubmitGuess/SubmitGuess';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import * as actions from '../../store/actions/index';
 import Button from '@material-ui/core/Button';
 import { useAuth0 } from "@auth0/auth0-react";
@@ -112,7 +113,7 @@ function Dashboard(props) {
 
   const guessSubmittedHandler = (event) => {
     event.preventDefault();
-    const guess = {totalCases: guessToSubmit, guessDate: props.nextGuessInfo.nextGuessDate}
+    const guess = { totalCases: guessToSubmit, guessDate: props.nextGuessInfo.nextGuessDate }
     props.createGuess(guess, props.token);
   }
 
@@ -126,7 +127,7 @@ function Dashboard(props) {
     setGuessToSubmit(event.target.value);
     const guess = event.target.value;
 
-    if(parseInt(guess) != null && parseInt(guess) > 0) {
+    if (parseInt(guess) != null && parseInt(guess) > 0) {
       setGuessToSubmitError(false);
       setSubmitButtonDisabled(false);
       setGuessToSubmitErrorText('');
@@ -135,13 +136,13 @@ function Dashboard(props) {
       setGuessToSubmitError(true);
       setSubmitButtonDisabled(true);
       setGuessToSubmitErrorText('Please enter a valid number');
-    } 
+    }
   };
 
   const initData = (token) => {
-      props.fetchDaysWon(token);
-      props.fetchResults(6, token);
-      props.fetchUserSubmittedNextGuess(token);
+    props.fetchDaysWon(token);
+    props.fetchResults(6, token);
+    props.fetchUserSubmittedNextGuess(token);
   };
 
   useEffect(() => {
@@ -159,7 +160,7 @@ function Dashboard(props) {
       }
     };
 
-    if(!props.token) {
+    if (!props.token) {
       getToken();
     }
     else {
@@ -167,46 +168,52 @@ function Dashboard(props) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  
+
   let mainDiv = <Loading />;
 
-  if(props.results && props.daysWon && props.nextGuessInfo) {
+  if (props.results && props.daysWon && props.nextGuessInfo) {
     mainDiv = <Container maxWidth="lg" className={classes.container}>
-                <Grid container spacing={3}>
-                  {/* Last Result */}
-                  <Grid item xs={12} md={4} lg={3}>
-                    <Paper className={fixedHeightPaper}>
-                      <LastResult result={props.results[0]}/>
-                    </Paper>
-                  </Grid>
-                  {/* Days Won Pie Chart */}
-                  <Grid item xs={12} md={4} lg={3}>
-                    <Paper className={fixedHeightPaper}>
-                      <DaysWon results={props.daysWon}/>
-                    </Paper>
-                  </Grid>
-                  {/* Submit Guess */}
-                  <Grid item xs={12} md={4} lg={3}>
-                    <Paper className={fixedHeightPaper}>
-                      <SubmitGuess nextGuessInfo={props.nextGuessInfo} 
-                                                          guessSubmitted={guessSubmittedHandler} 
-                                                          onChangeGuess={onChangeGuessToSubmitHandler}
-                                                          guessError={guessToSubmitError}
-                                                          submitButtonDisabled={submitButtonDisabled}
-                                                          errorText={guessToSubmitErrorText}/>
-                    </Paper>
-                  </Grid>
-                  {/* Previous Results */}
-                  <Grid item xs={12}>
-                    <Paper className={classes.paper}>
-                      <PreviousResults results={props.results.slice(1)} />
-                    </Paper>
-                  </Grid>
-                </Grid>
-                <Box pt={4}>
-                  <Copyright />
-                </Box>
-              </Container>;
+      <Grid container spacing={3}>
+        {/* Last Result */}
+        <Grid item xs={12} md={4} lg={3}>
+          <Paper className={fixedHeightPaper}>
+            <LastResult result={props.results[0]} />
+          </Paper>
+        </Grid>
+        {/* Days Won Pie Chart */}
+        <Grid item xs={12} md={4} lg={3}>
+          <Paper className={fixedHeightPaper}>
+            <DaysWon results={props.daysWon} />
+          </Paper>
+        </Grid>
+        {/* Submit Guess */}
+        <Grid item xs={12} md={4} lg={3}>
+          <Paper className={fixedHeightPaper}>
+            <SubmitGuess nextGuessInfo={props.nextGuessInfo}
+              guessSubmitted={guessSubmittedHandler}
+              onChangeGuess={onChangeGuessToSubmitHandler}
+              guessError={guessToSubmitError}
+              submitButtonDisabled={submitButtonDisabled}
+              errorText={guessToSubmitErrorText} />
+          </Paper>
+        </Grid>
+        {/* Past Champions */}
+        <Grid item xs={12} md={4} lg={3}>
+          <Paper className={fixedHeightPaper}>
+            <PastChampions />
+          </Paper>
+        </Grid>
+        {/* Previous Results */}
+        <Grid item xs={12}>
+          <Paper className={classes.paper}>
+            <PreviousResults results={props.results.slice(1)} />
+          </Paper>
+        </Grid>
+      </Grid>
+      <Box pt={4}>
+        <Copyright />
+      </Box>
+    </Container>;
   }
 
   return (
@@ -215,15 +222,15 @@ function Dashboard(props) {
       <AppBar position="absolute" className={clsx(classes.appBar, false && classes.appBarShift)}>
         <Toolbar className={classes.toolbar}>
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            KovidR.
+            KovidR '22
           </Typography>
           <IconButton color="inherit">
-          <Button variant="contained"
-                  color="secondary"
-                  className={classes.submit}
-                  onClick={logoutHandler}>
-                    Log Out
-          </Button>
+            <Button variant="contained"
+              color="secondary"
+              className={classes.submit}
+              onClick={logoutHandler}>
+              Log Out
+            </Button>
           </IconButton>
         </Toolbar>
       </AppBar>
@@ -237,23 +244,23 @@ function Dashboard(props) {
 
 const mapStateToProps = state => {
   return {
-      daysWon: state.guess.daysWon,
-      results: state.guess.results,
-      loading: state.guess.loading,
-      nextGuessInfo: state.guess.nextGuessInfo,
-      token: state.auth.token,
+    daysWon: state.guess.daysWon,
+    results: state.guess.results,
+    loading: state.guess.loading,
+    nextGuessInfo: state.guess.nextGuessInfo,
+    token: state.auth.token,
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-      fetchDaysWon: (token) => dispatch(actions.fetchResultsByDaysWon(token)),
-      fetchResults: (numResultsToFetch, token) => dispatch(actions.fetchResults(numResultsToFetch, token)),
-      fetchUserSubmittedNextGuess: (token) => dispatch(actions.fetchUserSubmittedNextGuess(token)),
-      createGuess: (guess, token) => dispatch(actions.createGuess(guess, token)),
-      auth: (token) => dispatch(actions.auth(token)),
-      logout: () => dispatch(actions.logout())
-    }
+    fetchDaysWon: (token) => dispatch(actions.fetchResultsByDaysWon(token)),
+    fetchResults: (numResultsToFetch, token) => dispatch(actions.fetchResults(numResultsToFetch, token)),
+    fetchUserSubmittedNextGuess: (token) => dispatch(actions.fetchUserSubmittedNextGuess(token)),
+    createGuess: (guess, token) => dispatch(actions.createGuess(guess, token)),
+    auth: (token) => dispatch(actions.auth(token)),
+    logout: () => dispatch(actions.logout())
+  }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
