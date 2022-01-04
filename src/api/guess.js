@@ -17,7 +17,7 @@ const axiosInstance = axios.create();
 
 const api = {
   getResultsByDaysWon(token) {
-    return axiosInstance.get(`/api/v1/Guess/GetResultsByDaysWon`, { baseURL: baseUrl, headers : getHeaders(token)});
+    return axiosInstance.get(`/api/v1/Guess/GetResultsByDaysWon?from=2022-01-01`, { baseURL: baseUrl, headers : getHeaders(token)});
   },
   getResultsList(numResultsToFetch, token) {
     return axiosInstance.get(`api/v1/Guess/GetResultsList/${numResultsToFetch}`, { baseURL: baseUrl, headers : getHeaders(token) });
